@@ -1,0 +1,164 @@
+
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>لمحة | Lamha Game</title>
+  <style>
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      min-height: 100vh;
+      display: grid;
+      place-items: center;
+      padding: 20px;
+      background: #100e0b;
+      color: #fff5e6;
+      font-family: Arial, sans-serif;
+    }
+    .game {
+      width: 100%;
+      max-width: 430px;
+      padding: 28px;
+      border: 1px solid #6b461d;
+      border-radius: 22px;
+      background: #1d1913;
+      text-align: center;
+      box-shadow: 0 15px 50px #0008;
+    }
+    h1 { color: #ffbd59; font-size: 42px; margin: 0; }
+    .sub { color: #b9ab97; }
+    .card {
+      margin: 24px 0;
+      padding: 22px 12px;
+      background: #2c2419;
+      border-radius: 15px;
+    }
+    #hint { font-size: 20px; line-height: 1.7; }
+    input, button {
+      width: 100%;
+      padding: 14px;
+      border-radius: 10px;
+      font-size: 17px;
+    }
+    input {
+      border: 1px solid #73552e;
+      background: #100e0b;
+      color: white;
+      text-align: center;
+      margin-bottom: 12px;
+    }
+    button {
+      border: 0;
+      background: #ffbd59;
+      color: #211609;
+      font-weight: bold;
+      cursor: pointer;
+    }
+    button:disabled { opacity: .5; }
+    #message { min-height: 28px; }
+    .score { color: #ffbd59; }
+  </style>
+</head>
+<body>
+  <main class="game">
+    <h1>لمحة</h1>
+    <p class="sub">خمّن الكلمة واجمع النقاط!</p>
+
+    <div class="card">
+      <p>💡 تلميح الكلمة</p>
+      <p id="hint">اضغط ابدأ حتى تحصل على أول تلميح.</p>
+    </div>
+
+    <input id="answer" placeholder="اكتب تخمينك هنا"
+      autocomplete="off" disabled>
+
+    <button id="check" disabled>تحقق من الإجابة</button>
+    <button id="start" style="margin-top:10px">ابدأ اللعب</button>
+
+    <p id="message" aria-live="polite"></p>
+    <p class="score">⭐ نقاطك: <span id="score">0</span></p>
+  </main>
+
+  <script>
+    const words = [
+      { word: "قمر", hint: "يظهر في السماء ليلًا" },
+      { word: "مفتاح", hint: "يساعدك على فتح الباب" },
+      { word: "كتاب", hint: "تقرأ صفحاته لتتعلم" },
+      { word: "نحلة", hint: "حشرة تصنع العسل" },
+      { word: "ساعة", hint: "تخبرك بالوقت" },
+      { word: "بحر", hint: "ماء واسع تعيش فيه الأسماك" },
+      { word: "مدرسة", hint: "مكان يذهب إليه الطلاب للتعلم" }
+    ];
+
+    let current = null;
+    let score = 0;
+    let remaining = [...words];
+
+    const hint = document.getElementById("hint");
+    const answer = document.getElementById("answer");
+    const check = document.getElementById("check");
+    const start = document.getElementById("start");
+    const message = document.getElementById("message");
+
+    function nextRound() {
+      if (remaining.length === 0) {
+        hint.textContent = "أكملت كل الكلمات! أحسنت 🎉";
+        message.textContent = "اضغط ابدأ للعب من جديد.";
+        current = null;
+        answer.disabled = true;
+        check.disabled = true;
+        start.disabled = false;
+        return;
+      }
+
+      const index = Math.floor(Math.random() * remaining.length);
+      current = remaining.splice(index, 1)[0];
+      hint.textContent = current.hint;
+      answer.value = "";
+      answer.disabled = false;
+      check.disabled = false;
+      start.disabled = true;
+      message.textContent = "";
+      answer.focus();
+    }
+
+    function normalize(text) {
+      return text.trim()
+        .replace(/[ًٌٍَُِّْـ]/g, "")
+        .replace(/[أإآ]/g, "ا")
+        .replace(/ى/g, "ي");
+    }
+
+    check.addEventListener("click", () => {
+      if (!current) return;
+
+      if (normalize(answer.value) === normalize(current.word)) {
+        score += 10;
+        document.getElementById("score").textContent = score;
+        message.textContent = "إجابة صحيحة! +10 نقاط 🎉";
+        current = null;
+        answer.disabled = true;
+        check.disabled = true;
+        start.disabled = false;
+        start.textContent = "الكلمة التالية";
+      } else {
+        message.textContent = "مو هي! حاول مرة ثانية 💡";
+      }
+    });
+
+    answer.addEventListener("keydown", event => {
+      if (event.key === "Enter" && !check.disabled) check.click();
+    });
+
+    start.addEventListener("click", () => {
+      if (remaining.length === 0) {
+        remaining = [...words];
+        start.textContent = "ابدأ اللعب";
+      }
+      nextRound();
+    });
+  </script>
+</body>
+</html>
