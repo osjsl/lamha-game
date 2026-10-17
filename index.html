@@ -240,3 +240,53 @@ if(hash.get("room")){$("roomCodeInput").value=hash.get("room");}
 </script>
 </body>
 </html>
+
+<!-- لوحة إدارة الغرفة -->
+<div id="roomAdmin" hidden>
+  <h3>👑 إدارة الغرفة</h3>
+  <label for="kickPlayer">اسم اللاعب:</label>
+  <input id="kickPlayer" placeholder="اكتب اسم اللاعب">
+  <button type="button" onclick="kickRoomPlayer()">
+    🚪 طرد اللاعب
+  </button>
+  <p id="kickMessage"></p>
+</div>
+
+<script>
+function kickRoomPlayer() {
+  const name = document.getElementById("kickPlayer").value.trim();
+  const message = document.getElementById("kickMessage");
+
+  if (!name) {
+    message.textContent = "اكتب اسم اللاعب أولًا.";
+    return;
+  }
+
+  message.textContent =
+    "يلزم ربط الطرد بخادم الغرفة للتحقق من صلاحية المضيف وطرد " +
+    name + " فعليًا.";
+}
+</script>
+
+async function generateLamhaPuzzle() {
+  const response = await fetch(
+    "https://ierqxbakhlxjswiybrac.supabase.co/functions/v1/generate-hint-2",
+    {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        "apikey": "ضع_مفتاح_Supabase_العام_هنا",
+        "Authorization": "Bearer ضع_مفتاح_Supabase_العام_هنا"
+      },
+      body: JSON.stringify({})
+    }
+  );
+
+  const data = await response.json();
+
+  if (!response.ok) {
+    throw new Error(data.error || "تعذّر إنشاء اللغز");
+  }
+
+  return data;
+}
