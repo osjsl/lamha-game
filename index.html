@@ -240,3 +240,13 @@ if(hash.get("room")){$("roomCodeInput").value=hash.get("room");}
 </script>
 </body>
 </html>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script>
+const SUPABASE_URL = "https://ierqxbakhlxjswiybrac.supabase.co";
+const SUPABASE_PUBLISHABLE_KEY = "sb_publishable__kos4h8ApmvLPTFz-MnW4w_XSKXxxZy";
+
+const supabaseClient = window.supabase.createClient(
+  SUPABASE_URL,
+  SUPABASE_PUBLISHABLE_KEY
+);
+</script>
