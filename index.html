@@ -2,163 +2,241 @@
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>لمحة | Lamha Game</title>
-  <style>
-    * { box-sizing: border-box; }
-    body {
-      margin: 0;
-      min-height: 100vh;
-      display: grid;
-      place-items: center;
-      padding: 20px;
-      background: #100e0b;
-      color: #fff5e6;
-      font-family: Arial, sans-serif;
-    }
-    .game {
-      width: 100%;
-      max-width: 430px;
-      padding: 28px;
-      border: 1px solid #6b461d;
-      border-radius: 22px;
-      background: #1d1913;
-      text-align: center;
-      box-shadow: 0 15px 50px #0008;
-    }
-    h1 { color: #ffbd59; font-size: 42px; margin: 0; }
-    .sub { color: #b9ab97; }
-    .card {
-      margin: 24px 0;
-      padding: 22px 12px;
-      background: #2c2419;
-      border-radius: 15px;
-    }
-    #hint { font-size: 20px; line-height: 1.7; }
-    input, button {
-      width: 100%;
-      padding: 14px;
-      border-radius: 10px;
-      font-size: 17px;
-    }
-    input {
-      border: 1px solid #73552e;
-      background: #100e0b;
-      color: white;
-      text-align: center;
-      margin-bottom: 12px;
-    }
-    button {
-      border: 0;
-      background: #ffbd59;
-      color: #211609;
-      font-weight: bold;
-      cursor: pointer;
-    }
-    button:disabled { opacity: .5; }
-    #message { min-height: 28px; }
-    .score { color: #ffbd59; }
-  </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>لمحة | Lamha Game</title>
+<style>
+:root{--bg:#100b20;--panel:#1d1433;--purple:#9255ff;--pink:#d76aff;--text:#f7f0ff;--muted:#b9a9d5}
+*{box-sizing:border-box}
+body{margin:0;background:radial-gradient(ellipse at top,#382064 0,#17102c 45%,#0d0918 100%);color:var(--text);font-family:system-ui,Arial,sans-serif;min-height:100vh}
+button,input{font:inherit}
+button{border:0;cursor:pointer;border-radius:13px;padding:12px 15px;font-weight:700;transition:.2s}
+button:hover{filter:brightness(1.12)}
+.primary{background:linear-gradient(100deg,#8951ff,#c05cff);color:white;box-shadow:0 5px 20px #8a48ff35}
+.secondary{background:#33234f;color:#eee0ff;border:1px solid #62438a}
+input{width:100%;padding:13px;border-radius:12px;background:#120c22;border:1px solid #4a356b;color:white;outline:none}
+input:focus{border-color:#bb81ff}
+header{display:flex;justify-content:space-between;align-items:center;gap:12px;padding:16px max(16px,calc((100% - 1100px)/2));border-bottom:1px solid #ffffff13;background:#100b20aa;position:sticky;top:0;backdrop-filter:blur(12px);z-index:3}
+.logo{font-size:25px;font-weight:900;color:#d9b3ff}
+.tag{font-size:12px;color:#cdb5f4;background:#33204e;padding:6px 10px;border-radius:20px}
+main{max-width:1100px;margin:auto;padding:22px 16px 45px}
+.hero{text-align:center;padding:28px 0 22px}
+.hero h1{font-size:clamp(34px,8vw,55px);margin:0;background:linear-gradient(90deg,#e2c0ff,#ad79ff,#ffb7ed);color:transparent;background-clip:text}
+.hero p{color:var(--muted);margin-top:8px}
+.layout{display:grid;grid-template-columns:1fr 1fr;gap:17px}
+.card{background:linear-gradient(145deg,#25183d,#191128);border:1px solid #63438a66;border-radius:20px;padding:20px;box-shadow:0 15px 35px #0002}
+.card h2{margin:0 0 15px;font-size:20px}
+.stack{display:grid;gap:11px}
+.row{display:flex;gap:10px;align-items:center}
+.row>*{min-width:0}
+.row input{flex:1}
+.full{width:100%}
+.muted{color:var(--muted);font-size:13px}
+.hidden{display:none!important}
+.status{color:#d7baff;font-size:13px;min-height:20px;margin-top:10px}
+.players{display:grid;gap:8px;margin-top:12px}
+.player{display:flex;justify-content:space-between;align-items:center;background:#ffffff08;border:1px solid #ffffff0b;padding:10px 12px;border-radius:12px}
+.badge{font-size:12px;color:#d6b4ff}
+.gamebox{text-align:center;background:linear-gradient(145deg,#2b1b48,#171024);border:1px solid #8256ae66;border-radius:20px;padding:23px;margin-bottom:17px}
+.hint{font-size:20px;line-height:1.8;min-height:90px;display:grid;place-items:center;padding:10px}
+.points{font-size:24px;color:#f6d17b;font-weight:900}
+.chatlog{height:220px;overflow-y:auto;background:#100b1c;border:1px solid #493263;border-radius:12px;padding:12px;display:flex;flex-direction:column;gap:8px}
+.msg{background:#2b1d43;border-radius:12px;padding:9px 11px;overflow-wrap:anywhere}
+.msg b{color:#d5aaff}
+.msg small{color:#a995c2;display:block;font-size:11px}
+.winner{background:linear-gradient(135deg,#39215b,#241438);border:1px solid #e3b65b;border-radius:20px;text-align:center;padding:24px;margin-bottom:17px}
+.winner .cup{font-size:44px}
+.winner h2{color:#ffdb80;font-size:28px;margin:5px 0}
+footer{text-align:center;color:#87789e;padding:22px;font-size:12px}
+@media(max-width:720px){.layout{grid-template-columns:1fr}.card{padding:16px}.hero{padding-top:15px}header{padding:13px 15px}}
+</style>
 </head>
 <body>
-  <main class="game">
+<header>
+  <div class="logo">✦ لمحة</div>
+  <div class="tag">🎮 لعبة التخمين</div>
+</header>
+<main>
+  <section class="hero">
     <h1>لمحة</h1>
-    <p class="sub">خمّن الكلمة واجمع النقاط!</p>
+    <p>خمنها قبل الجميع، واجعل اسمك يتصدر الفوز!</p>
+  </section>
 
-    <div class="card">
-      <p>💡 تلميح الكلمة</p>
-      <p id="hint">اضغط ابدأ حتى تحصل على أول تلميح.</p>
+  <section class="card stack" id="entry">
+    <h2>👤 ادخل إلى اللعبة</h2>
+    <label for="playerName" class="muted">اسم اللاعب</label>
+    <input id="playerName" maxlength="20" placeholder="اكتب اسمك...">
+    <button class="primary full" id="createRoom">＋ إنشاء غرفة جديدة</button>
+    <div class="row">
+      <input id="roomCodeInput" maxlength="12" placeholder="رمز الغرفة">
+      <button class="secondary" id="joinRoom">انضمام</button>
+    </div>
+    <div class="status" id="entryStatus"></div>
+  </section>
+
+  <section id="room" class="hidden">
+    <div class="card" style="margin-bottom:17px">
+      <div class="row" style="justify-content:space-between;flex-wrap:wrap">
+        <div>
+          <div class="muted">غرفتك الحالية</div>
+          <h2 style="margin:5px 0">🔮 غرفة لمحة</h2>
+          <div>الرمز: <b id="roomCode" style="color:#d6b0ff"></b></div>
+        </div>
+        <button class="secondary" id="shareRoom">🔗 مشاركة الرابط</button>
+      </div>
+      <div class="status" id="roomStatus">هذه واجهة أولية؛ لم يتم ربط الغرفة بخادم أونلاين بعد.</div>
     </div>
 
-    <input id="answer" placeholder="اكتب تخمينك هنا"
-      autocomplete="off" disabled>
+    <div class="layout">
+      <div class="card">
+        <h2>👥 اللاعبون</h2>
+        <div id="players" class="players"></div>
+        <button class="primary full" id="startGame" style="margin-top:15px">🚀 ابدأ اللعبة</button>
+        <button class="secondary full" id="leaveRoom" style="margin-top:8px">العودة للرئيسية</button>
+      </div>
 
-    <button id="check" disabled>تحقق من الإجابة</button>
-    <button id="start" style="margin-top:10px">ابدأ اللعب</button>
+      <div class="card">
+        <h2>💬 شات الغرفة</h2>
+        <div id="chatLog" class="chatlog">
+          <div class="msg">أهلًا بك في لمحة!<small>النظام</small></div>
+        </div>
+        <div class="row" style="margin-top:10px">
+          <input id="chatInput" maxlength="300" placeholder="اكتب رسالة...">
+          <button class="primary" id="sendChat">إرسال</button>
+        </div>
+        <div class="muted" style="margin-top:8px">الشات في هذه النسخة محلي على هذا الجهاز فقط.</div>
+      </div>
+    </div>
 
-    <p id="message" aria-live="polite"></p>
-    <p class="score">⭐ نقاطك: <span id="score">0</span></p>
-  </main>
+    <section id="game" class="hidden" style="margin-top:17px">
+      <div id="winner" class="winner hidden">
+        <div class="cup">🏆</div>
+        <div>الفائز في هذه الجولة</div>
+        <h2 id="winnerName"></h2>
+        <div>🎉 أحسنت! لقد سبقت الجميع</div>
+      </div>
+      <div class="gamebox">
+        <div class="tag">🧠 لغز الجولة</div>
+        <div class="hint" id="hint">اضغط على زر الجولة للحصول على تلميح.</div>
+        <div class="row">
+          <input id="guess" placeholder="ما هي الإجابة؟">
+          <button class="primary" id="submitGuess">تخمين</button>
+        </div>
+        <div class="status" id="gameStatus"></div>
+      </div>
+      <div class="card">
+        <h2>🏆 ترتيب اللاعبين</h2>
+        <div id="scoreboard" class="players"></div>
+        <button class="secondary full" id="nextRound" style="margin-top:13px">لغز جديد</button>
+      </div>
+    </section>
+  </section>
+</main>
+<footer>لمحة © — العب بذكاء، واربح بالتخمين.</footer>
 
-  <script>
-    const words = [
-      { word: "قمر", hint: "يظهر في السماء ليلًا" },
-      { word: "مفتاح", hint: "يساعدك على فتح الباب" },
-      { word: "كتاب", hint: "تقرأ صفحاته لتتعلم" },
-      { word: "نحلة", hint: "حشرة تصنع العسل" },
-      { word: "ساعة", hint: "تخبرك بالوقت" },
-      { word: "بحر", hint: "ماء واسع تعيش فيه الأسماك" },
-      { word: "مدرسة", hint: "مكان يذهب إليه الطلاب للتعلم" }
-    ];
-
-    let current = null;
-    let score = 0;
-    let remaining = [...words];
-
-    const hint = document.getElementById("hint");
-    const answer = document.getElementById("answer");
-    const check = document.getElementById("check");
-    const start = document.getElementById("start");
-    const message = document.getElementById("message");
-
-    function nextRound() {
-      if (remaining.length === 0) {
-        hint.textContent = "أكملت كل الكلمات! أحسنت 🎉";
-        message.textContent = "اضغط ابدأ للعب من جديد.";
-        current = null;
-        answer.disabled = true;
-        check.disabled = true;
-        start.disabled = false;
-        return;
-      }
-
-      const index = Math.floor(Math.random() * remaining.length);
-      current = remaining.splice(index, 1)[0];
-      hint.textContent = current.hint;
-      answer.value = "";
-      answer.disabled = false;
-      check.disabled = false;
-      start.disabled = true;
-      message.textContent = "";
-      answer.focus();
-    }
-
-    function normalize(text) {
-      return text.trim()
-        .replace(/[ًٌٍَُِّْـ]/g, "")
-        .replace(/[أإآ]/g, "ا")
-        .replace(/ى/g, "ي");
-    }
-
-    check.addEventListener("click", () => {
-      if (!current) return;
-
-      if (normalize(answer.value) === normalize(current.word)) {
-        score += 10;
-        document.getElementById("score").textContent = score;
-        message.textContent = "إجابة صحيحة! +10 نقاط 🎉";
-        current = null;
-        answer.disabled = true;
-        check.disabled = true;
-        start.disabled = false;
-        start.textContent = "الكلمة التالية";
-      } else {
-        message.textContent = "مو هي! حاول مرة ثانية 💡";
-      }
-    });
-
-    answer.addEventListener("keydown", event => {
-      if (event.key === "Enter" && !check.disabled) check.click();
-    });
-
-    start.addEventListener("click", () => {
-      if (remaining.length === 0) {
-        remaining = [...words];
-        start.textContent = "ابدأ اللعب";
-      }
-      nextRound();
-    });
-  </script>
+<script>
+const $ = id => document.getElementById(id);
+let me = "", roomCode = "", host = false, playing = false;
+let score = 0, answer = "", roundWinner = false, roundNumber = 0;
+let players = [];
+const puzzles = [
+ {answer:"القمر",hint:"أظهر في الليل وأتغير في شكلي خلال الشهر."},
+ {answer:"النحلة",hint:"أطير بين الأزهار وأنتج شيئًا يحبه كثيرون."},
+ {answer:"المفتاح",hint:"أساعدك على فتح شيء مغلق."},
+ {answer:"الساعة",hint:"أخبرك بشيء لا يمكنك إيقاف مروره."},
+ {answer:"البحر",hint:"أنا واسع ومليء بالماء وتعيش فيّ كائنات كثيرة."},
+ {answer:"الكتاب",hint:"تجد داخلي صفحات ومعلومات وقصصًا."},
+ {answer:"المدرسة",hint:"يذهب إليّ الطلاب ليتعلموا."},
+ {answer:"الطائرة",hint:"أنقل الناس في السماء بين المدن والبلدان."},
+ {answer:"العراق",hint:"بلد عربي عاصمته بغداد."},
+ {answer:"الحاسوب",hint:"تستطيع اللعب والعمل والتعلم باستخدامي."}
+];
+function say(id,text){$(id).textContent=text}
+function addSystem(text){
+ const div=document.createElement("div");div.className="msg";div.textContent=text;
+ $("chatLog").appendChild(div);$("chatLog").scrollTop=$("chatLog").scrollHeight;
+}
+function renderPlayers(){
+ $("players").replaceChildren();
+ players.forEach(p=>{
+  const div=document.createElement("div");div.className="player";
+  const name=document.createElement("span");name.textContent=p.name+(p.host?" 👑":"");
+  const pts=document.createElement("b");pts.textContent=p.score+" نقطة";
+  div.append(name,pts);$("players").appendChild(div);
+ });
+ $("scoreboard").replaceChildren();
+ [...players].sort((a,b)=>b.score-a.score).forEach((p,i)=>{
+  const div=document.createElement("div");div.className="player";
+  div.textContent=(i+1)+". "+p.name+" — "+p.score+" نقطة";
+  $("scoreboard").appendChild(div);
+ });
+}
+function enterRoom(code,isHost){
+ me=$("playerName").value.trim();
+ if(!me){say("entryStatus","اكتب اسمك أولًا.");return}
+ roomCode=code;host=isHost;
+ players=[{name:me,score:0,host:true}];
+ $("entry").classList.add("hidden");$("room").classList.remove("hidden");
+ say("roomCode",roomCode);
+ say("roomStatus","الغرفة محلية تجريبية؛ مشاركة الرابط لا تضيف لاعبين إلى خادم بعد.");
+ renderPlayers();addSystem("دخل "+me+" الغرفة.");
+}
+$("createRoom").onclick=()=>{
+ const code=Math.random().toString(36).slice(2,8).toUpperCase();
+ enterRoom(code,true);
+};
+$("joinRoom").onclick=()=>{
+ const code=$("roomCodeInput").value.trim().toUpperCase();
+ if(!code){say("entryStatus","اكتب رمز الغرفة.");return}
+ enterRoom(code,false);
+};
+$("shareRoom").onclick=async()=>{
+ const url=location.href.split("#")[0]+"#room="+roomCode;
+ try{await navigator.clipboard.writeText(url);say("roomStatus","تم نسخ الرابط. ملاحظة: الربط أونلاين غير مفعّل بعد.");}
+ catch{prompt("انسخ رابط الغرفة:",url)}
+};
+$("leaveRoom").onclick=()=>{
+ playing=false;players=[];$("room").classList.add("hidden");$("entry").classList.remove("hidden");
+ $("game").classList.add("hidden");$("chatLog").replaceChildren();
+};
+function sendMessage(){
+ const text=$("chatInput").value.trim();if(!text)return;
+ const div=document.createElement("div");div.className="msg";
+ const b=document.createElement("b");b.textContent=me+": ";
+ const span=document.createElement("span");span.textContent=text;
+ div.append(b,span);$("chatLog").appendChild(div);$("chatLog").scrollTop=$("chatLog").scrollHeight;
+ $("chatInput").value="";
+}
+$("sendChat").onclick=sendMessage;
+$("chatInput").addEventListener("keydown",e=>{if(e.key==="Enter")sendMessage()});
+function newRound(){
+ roundNumber++;roundWinner=false;
+ const p=puzzles[Math.floor(Math.random()*puzzles.length)];
+ answer=p.answer;
+ say("hint",p.hint);say("gameStatus","الجولة "+roundNumber+" — من سيجيب أولًا؟");
+ $("winner").classList.add("hidden");$("guess").value="";
+}
+$("startGame").onclick=()=>{
+ playing=true;$("game").classList.remove("hidden");newRound();
+ say("roomStatus","بدأت الجولة التجريبية على هذا الجهاز فقط.");
+};
+function normalize(s){return s.trim().toLowerCase().replace(/[أإآ]/g,"ا").replace(/ى/g,"ي").replace(/ة/g,"ه").replace(/[ًٌٍَُِّْـ\s]/g,"")}
+function guess(){
+ if(!playing||roundWinner){say("gameStatus","ابدأ جولة جديدة أولًا.");return}
+ if(!normalize($("guess").value)){say("gameStatus","اكتب إجابتك أولًا.");return}
+ if(normalize($("guess").value)===normalize(answer)){
+  roundWinner=true;score+=10;
+  const p=players.find(x=>x.name===me);if(p)p.score=score;
+  say("winnerName",me);$("winner").classList.remove("hidden");
+  say("gameStatus","إجابة صحيحة! حصلت على 10 نقاط.");
+  addSystem("🏆 الفائز في الجولة: "+me);renderPlayers();
+ }else say("gameStatus","إجابة غير صحيحة، حاول مرة أخرى!");
+}
+$("submitGuess").onclick=guess;
+$("guess").addEventListener("keydown",e=>{if(e.key==="Enter")guess()});
+$("nextRound").onclick=()=>{if(!playing)return;newRound()};
+const hash=new URLSearchParams(location.hash.slice(1));
+if(hash.get("room")){$("roomCodeInput").value=hash.get("room");}
+</script>
 </body>
 </html>
